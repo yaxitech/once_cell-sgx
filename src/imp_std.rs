@@ -3,14 +3,23 @@
 //   * no poisoning
 //   * init function can fail
 
+
+use std::prelude::v1::*;
 use std::{
     cell::{Cell, UnsafeCell},
     hint::unreachable_unchecked,
     marker::PhantomData,
     panic::{RefUnwindSafe, UnwindSafe},
     sync::atomic::{AtomicBool, AtomicUsize, Ordering},
-    thread::{self, Thread},
 };
+#[cfg(not(feature = "mesalock_sgx"))]
+use std::thread::{self, Thread};
+
+#[cfg(feature = "mesalock_sgx")]
+use std::thread::{self, SgxThread as Thread};
+
+
+
 
 use crate::take_unchecked;
 
